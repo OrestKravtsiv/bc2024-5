@@ -7,6 +7,8 @@ const path = require('path');
 const multer = require('multer');
 const upload = multer();
 
+// app.use(express.json());
+app.use(bodyParser.raw({ type: 'text/plain' }));
 
 //Налаштував потрібні аргументи
 program
@@ -28,13 +30,6 @@ const host = options.host;
 const port = options.port;
 const cache = options.cache;
 
-// PArt 2
-
-
-
-// app.use(bodyParser.json());
-// app.use(express.urlencoded({ extended: true }));
-
 // GET /notes/<ім’я нотатки>
 app.get('/notes/:name', (req, res) => {
     const noteName = req.params.name;
@@ -52,8 +47,8 @@ app.get('/notes/:name', (req, res) => {
 // PUT /notes/<ім’я нотатки>
 app.put('/notes/:name', upload.none(), (req, res) => {
     const noteName = req.params.name;
-    const { text } = req.body;
-    // console.log(text);
+    const text = req.body;
+    console.log(req.body);
 
     try {
         const notePath = path.join(cache, `${noteName}.txt`);
@@ -96,7 +91,6 @@ app.get('/notes', (req, res) => {
 // POST /write
 app.post('/write', upload.none(), (req, res) => {
     const { note_name, note } = req.body;
-
     try {
 
         const notePath = path.join(cache, `${note_name}.txt`);
